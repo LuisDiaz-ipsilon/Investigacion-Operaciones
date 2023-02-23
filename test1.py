@@ -1,33 +1,35 @@
-
-"""
 import numpy as np
 
 import standar_form
-import simplex
+import simplex_format
+import simplex_operation
 
 c = np.array([2, -3, 5])
-A = np.array([[1, 1, 0], [3, 1, -1]])
-b = np.array([0, 2, 3])
-signos = ["<=", "=>"]
+A = np.array([[1, 1, 0], [3, 1, -1], [2, 4, 8]])
+b = np.array([0, 2, 3, 8])
+signos = ["<=", "=>", "<="]
 #Naturaleza de las variables
-nv = ["=>", "=>", "eR"]
+nv = ["=>", "=>", "=>"]
 
 
 
 c_std, A_std, b_std, nfo_std, nv_std= standar_form.forma_estandar("max", c, A, b, signos, nv)
 
 
-#Ejecutando el metodo simplex
-tablero_inicial = simplex.simplex_tab_format(c_std, A_std, b_std)
+#Darle formato al tablero
+tablero_inicial = simplex_format.simplex_tab_format(c_std, A_std, b_std)
 
-"""
-import numpy as np
+#operar el tablero
 
-tablero = np.array([[0, 0, 0, 0, 0],
-                    [1, 0, 0, 0, 1],
-                    [0, 0, 1, 0, 0],
-                    [0, 1, 0, 0, 0]])
+tablero = simplex_operation.simplex_method_p1_canonic(tablero_inicial)
+tablero, flag_c_o = simplex_operation.criterio_optimalidad(tablero)
 
-fila = np.transpose(np.nonzero(tablero[1:, 4]))[0] + 1
+while not flag_c_o:
+    tablero, flag_c_o = simplex_operation.criterio_optimalidad(tablero)
+    if not flag_c_o:
+        tablero = simplex_operation.operar_tablero(tablero)
+        tablero, flag_c_o = simplex_operation.criterio_optimalidad(tablero)
+    else:
+        break
 
-print(fila)
+
