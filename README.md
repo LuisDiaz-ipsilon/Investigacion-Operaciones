@@ -1,1 +1,1 @@
-[![Reporte](reporte.png)](EV EXTRA LFFD.pdf)
+[![Reporte](consola.png)](EV EXTRA LFFD.pdf)
