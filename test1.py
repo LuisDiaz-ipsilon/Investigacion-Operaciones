@@ -4,20 +4,23 @@ import standar_form
 import simplex_format
 import simplex_operation
 
-c = np.array([2, -3, 5])
-A = np.array([[1, 1, 0], [3, 1, -1], [2, 4, 8]])
-b = np.array([0, 2, 3, 8])
-signos = ["<=", "=>", "<="]
+fo = np.array([-1, 2,])
+s_a = np.array([[1, 2,], [2, 1]])
+b = np.array([0, 5, 15])
+signos = ["<=", "<="]
 #Naturaleza de las variables
-nv = ["=>", "=>", "=>"]
+nv = ["=>", "=>"]
 
+"""
+Paso 1 colocar en forma canonica la matriz inciial con simplex_method_p1_canonic
+Paso 2 verificar con criterio_optimalidad en caso de cumplir finzalir, en caso de fallas conrinuar con paso 3
+Paso 3 operar_tablero
+"""
 
-
-c_std, A_std, b_std, nfo_std, nv_std= standar_form.forma_estandar("max", c, A, b, signos, nv)
-
+fo_std, s_a_std, b_std, nfo_std, nv_std= standar_form.forma_estandar("max", fo, s_a, b, signos, nv)
 
 #Darle formato al tablero
-tablero_inicial = simplex_format.simplex_tab_format(c_std, A_std, b_std)
+tablero_inicial = simplex_format.simplex_tab_format(fo_std, s_a_std, b_std)
 
 #operar el tablero
 

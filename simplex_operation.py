@@ -1,16 +1,28 @@
 import numpy as np
 from termcolor import colored
 
+"""
+
+Operaciones necesarias para resolver mediante simplex 
+
+Paso 1 colocar en forma canonica la matriz inciial con simplex_method_p1_canonic
+Paso 2 verificar con criterio_optimalidad en caso de cumplir finzalir, en caso de fallas conrinuar con paso 3
+Paso 3 operar_tablero
+"""
 def simplex_method_p1_canonic(tablero):
+    """
+    Para el caso unico cuando se recibe el tablero se requiere conocer sus variables basicas y pivotar
+    """
+
     # Paso 0: Separar el tablero
-    c_std = tablero[0, :-1]
-    A_std = tablero[1:, :-1]
+    fo_std = tablero[0, :-1]
+    s_a_std = tablero[1:, :-1]
     b_std = tablero[:, -1]
 
     # Paso 1: Encontrar las variables básicas
     vb = []
-    for j in range(A_std.shape[1]):
-        col_j = A_std[:, j]
+    for j in range(s_a_std.shape[1]):
+        col_j = s_a_std[:, j]
         for k in range(len(col_j)):
             if col_j[k]==1 and col_j.sum()==1:
                 vb = np.append(vb, j)
@@ -24,7 +36,7 @@ def simplex_method_p1_canonic(tablero):
         columna_vb = tablero[:, vb[j]]
         if columna_vb.sum()!=1:
             #Agrego valores a una matriz len(pivotar)x2 el segundo valor es por el cual devera hacer la operacion
-            pivotar_ = np.vstack([pivotar_, [vb[j], c_std[vb[j]]]])
+            pivotar_ = np.vstack([pivotar_, [vb[j], fo_std[vb[j]]]])
 
     print("\nSe tiene que hay que pivotar lo siguiente:\n[col, valor contenido]")
     pivotar_ = pivotar_[2:, :]
@@ -44,8 +56,12 @@ def simplex_method_p1_canonic(tablero):
 
     return tablero
 
-#Verificamos si cumple el criterio de optimalidad
+
 def criterio_optimalidad(tablero):
+
+    """
+    #Verificamos si cumple el criterio de optimalidad
+    """
 
     for i in range(tablero.shape[1]):
         flag_c_o = True
@@ -60,17 +76,20 @@ def criterio_optimalidad(tablero):
             print(colored("Cumple el criterio de optimalidad", 'white', 'on_green'))
     return tablero, flag_c_o
 
-#Cuando no se cumple el criterio de optimalidad
+
 def operar_tablero(tablero):
+    """
+    Cuando no se cumple el criterio de optimalidad
+    """
     #Buscar cuales son las columnas que no cumplen con el criterio
-    c_std = tablero[0,:-1]
+    fo_std = tablero[0,:-1]
 
     var_entra=0
     num_alto_aux=0
-    for j in range(len(c_std)):
-        if c_std[j]>0 and c_std[j]>num_alto_aux:
+    for j in range(len(fo_std)):
+        if fo_std[j]>0 and fo_std[j]>num_alto_aux:
             var_entra=j
-            num_alto_aux = c_std[j]
+            num_alto_aux = fo_std[j]
     #print("\n Entra x_{}".format(str(var_entra)))
 
     #Para determinar la variable que sale es necesario conocer el corden correspondiente. vb[] es el vector ordenado de indices de las variables basicas
@@ -123,15 +142,15 @@ def operar_tablero(tablero):
     print(colored("Tablero operado", 'black', 'on_green'))
     print(tablero)
     
+    
     return tablero
         
 
+#Ejemplo
 """
 #Si se desea ingresar un tablero despues de su forma estandar puedes hacerlo desde aqui quitando la parte comentada
-tablero = np.array([[2, 0, 38, 5, 1, 11, 0],
-                    [1, 1, 0, 0, 1, 0, 2],
-                    [3, 1, 2, 0, 0, 1, 3],
-                    [1, 1, 3, 1, 0, 0, 0]])
+tablero = np.array([[1, 2, 0], [1, 1, 1], [2, 3, 1], [3, 2, 1], [3, 3, 4]])
+
 
 tablero = simplex_method_p1_canonic(tablero)
 tablero, flag_c_o = criterio_optimalidad(tablero)
@@ -141,6 +160,7 @@ while not flag_c_o:
     if not flag_c_o:
         tablero = operar_tablero(tablero)
         tablero, flag_c_o = criterio_optimalidad(tablero)
+        
     else:
         break
 """
